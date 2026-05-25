@@ -1,29 +1,31 @@
 package gti.aggregatorservice.dto;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.UUID;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Entity()
+@Table(name = "transaction")
 public class TransactionEvent {
-
-    @NotBlank(message = "id is required")
-    private String id;
+    @Id
+    private UUID id;
 
     @NotBlank(message = "customer_id is required")
     private String accountId;
 
-    @NotBlank(message = "merchant is required")
-    @Size(max = 255)
     private String merchant;
-
-    private String merchantId;
+    private Integer merchantId;
 
     @NotNull(message = "amount is required")
     @DecimalMin(value = "0.00", inclusive = false, message = "amount must be positive")
@@ -32,14 +34,13 @@ public class TransactionEvent {
 
     @Pattern(regexp = "[A-Z]{3}", message = "currency must be a 3-letter ISO code")
     @Builder.Default
-    private String currency = "USD";
+    private String currency = "ZAR";
 
     @NotBlank(message = "source is required")
     private String source;
 
     @NotNull(message = "transaction_date is required")
-  //  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date transactionDate;
-
+    private String Category;
     private Date createdDate;
 }

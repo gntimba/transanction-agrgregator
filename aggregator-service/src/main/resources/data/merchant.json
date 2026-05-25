@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "merchant": "Woolworths",
+    "category": "GROCERIES"
+  },
+  {
+    "id": 2,
+    "merchant": "Checkers",
+    "category": "GROCERIES"
+  },
+  {
+    "id": 3,
+    "merchant": "Pick n Pay",
+    "category": "GROCERIES"
+  },
+  {
+    "id": 4,
+    "merchant": "McDonald's",
+    "category": "FAST_FOOD"
+  },
+  {
+    "id": 5,
+    "merchant": "KFC",
+    "category": "FAST_FOOD"
+  },
+  {
+    "id": 6,
+    "merchant": "Uber",
+    "category": "TRANSPORT"
+  },
+  {
+    "id": 7,
+    "merchant": "Bolt",
+    "category": "TRANSPORT"
+  },
+  {
+    "id": 8,
+    "merchant": "Shell",
+    "category": "FUEL"
+  },
+  {
+    "id": 9,
+    "merchant": "Engen",
+    "category": "FUEL"
+  },
+  {
+    "id": 10,
+    "merchant": "Takealot",
+    "category": "SHOPPING"
+  },
+  {
+    "id": 11,
+    "merchant": "Amazon",
+    "category": "SHOPPING"
+  },
+  {
+    "id": 12,
+    "merchant": "Netflix",
+    "category": "ENTERTAINMENT"
+  },
+  {
+    "id": 13,
+    "merchant": "Spotify",
+    "category": "ENTERTAINMENT"
+  },
+  {
+    "id": 14,
+    "merchant": "Vodacom",
+    "category": "TELECOMMUNICATION"
+  },
+  {
+    "id": 15,
+    "merchant": "MTN",
+    "category": "TELECOMMUNICATION"
+  },
+  {
+    "id": 16,
+    "merchant": "Dis-Chem",
+    "category": "PHARMACY"
+  },
+  {
+    "id": 17,
+    "merchant": "Clicks",
+    "category": "PHARMACY"
+  },
+  {
+    "id": 18,
+    "merchant": "Uber Eats",
+    "category": "FOOD_DELIVERY"
+  },
+  {
+    "id": 19,
+    "merchant": "Makro",
+    "category": "ELECTRONICS"
+  },
+  {
+    "id": 20,
+    "merchant": "Virgin Active",
+    "category": "FITNESS"
+  }
+]

@@ -1,6 +1,6 @@
 package gti.ingestorservice.controller;
 
-import gti.ingestorservice.dto.TransactionEvent;
+import gti.ingestorservice.dto.TransactionIncoming;
 import gti.ingestorservice.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,8 +16,8 @@ public class TransactionController {
     TransactionService transactionService;
 
     @PostMapping("v1/transaction")
-    public String transactionEvent(@RequestBody TransactionEvent transactionEvent) {
+    public String transactionEvent(@RequestBody TransactionIncoming transactionIncoming) {
 
-        return transactionService.publish(transactionEvent);
+        return transactionService.publish(transactionIncoming);
     }
 }

@@ -1,6 +1,6 @@
 package gti.ingestorservice.service;
 
-import gti.ingestorservice.dto.TransactionEvent;
+import gti.ingestorservice.dto.TransactionIncoming;
 import gti.ingestorservice.producer.kafkaProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,10 +11,10 @@ public class TransactionService {
     @Autowired
     private kafkaProducer kafkaProducer;
 
-    public String publish(TransactionEvent transactionEvent) {
-        transactionEvent.setCreatedDate(new Date());
+    public String publish(TransactionIncoming transactionIncoming) {
+        transactionIncoming.setCreatedDate(new Date());
         try {
-            kafkaProducer.publish(transactionEvent);
+            kafkaProducer.publish(transactionIncoming);
         } catch (Exception e) {
             e.printStackTrace();
             return e.getMessage();

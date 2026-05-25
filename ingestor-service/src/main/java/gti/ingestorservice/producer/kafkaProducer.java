@@ -1,17 +1,16 @@
 package gti.ingestorservice.producer;
 
-import gti.ingestorservice.dto.TransactionEvent;
+import gti.ingestorservice.dto.TransactionIncoming;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Component
 public class kafkaProducer {
     @Autowired
-    private KafkaTemplate<String, TransactionEvent> kafkaTemplate;
+    private KafkaTemplate<String, TransactionIncoming> kafkaTemplate;
 
-    public void publish(TransactionEvent event) {
+    public void publish(TransactionIncoming event) {
         kafkaTemplate.send("transactions", event);
     }
 }
