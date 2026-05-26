@@ -9,9 +9,7 @@ import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class MerchantLoaderService {
@@ -19,6 +17,8 @@ public class MerchantLoaderService {
     private Logger log = LoggerFactory.getLogger(MerchantLoaderService.class);
 
     private final Map<Integer, MerchantCategory> merchantCategories = new HashMap<>();
+    private final Set<String> Categories = new HashSet<>();
+    List<MerchantCategory> merchants = null;
 
     public MerchantLoaderService(ObjectMapper objectMapper) throws Exception {
 
@@ -28,14 +28,14 @@ public class MerchantLoaderService {
         TypeReference<List<MerchantCategory>> type = new TypeReference<>() {
         };
 
-        List<MerchantCategory> merchants =
-                objectMapper.readValue(inputStream, type);
+        merchants = objectMapper.readValue(inputStream, type);
 
         for (MerchantCategory merchant : merchants) {
             merchantCategories.put(
                     merchant.getId(),
                     merchant
             );
+            Categories.add(merchant.getCategory());
         }
 
         log.info("Loaded merchants into memory");
@@ -45,6 +45,13 @@ public class MerchantLoaderService {
 
         return merchantCategories.get(merchant);
 
+    }
+
+    public Set<String> getCategories() {
+        return Categories;
+    }
+    public List<MerchantCategory> getMerchant() {
+        return merchants;
     }
 }
 

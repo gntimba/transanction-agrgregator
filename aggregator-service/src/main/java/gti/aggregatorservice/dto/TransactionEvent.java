@@ -1,8 +1,6 @@
 package gti.aggregatorservice.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -16,7 +14,15 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString
 @Entity()
-@Table(name = "transaction")
+@Table(
+        name = "transaction",
+        indexes = {
+                @Index(name = "idx_account_id", columnList = "accountId"),
+                @Index(name = "idx_transaction_date", columnList = "transactionDate"),
+                @Index(name = "idx_category", columnList = "category"),
+                @Index(name = "idx_merchant", columnList = "merchant")
+        }
+)
 public class TransactionEvent {
     @Id
     private UUID id;
@@ -29,7 +35,8 @@ public class TransactionEvent {
 
     @NotNull(message = "amount is required")
     @DecimalMin(value = "0.00", inclusive = false, message = "amount must be positive")
-    @Digits(integer = 10, fraction = 2)
+    @Digits(integer = 16, fraction = 2)
+    @Column(precision = 16, scale = 2)
     private BigDecimal amount;
 
     @Pattern(regexp = "[A-Z]{3}", message = "currency must be a 3-letter ISO code")
@@ -41,6 +48,6 @@ public class TransactionEvent {
 
     @NotNull(message = "transaction_date is required")
     private Date transactionDate;
-    private String Category;
+    private String category;
     private Date createdDate;
 }
