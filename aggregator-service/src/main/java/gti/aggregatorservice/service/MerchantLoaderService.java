@@ -1,6 +1,7 @@
 package gti.aggregatorservice.service;
 
 import gti.aggregatorservice.dto.MerchantCategory;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -17,6 +18,7 @@ public class MerchantLoaderService {
     private Logger log = LoggerFactory.getLogger(MerchantLoaderService.class);
 
     private final Map<Integer, MerchantCategory> merchantCategories = new HashMap<>();
+    @Getter
     private final Set<String> Categories = new HashSet<>();
     List<MerchantCategory> merchants = null;
 
@@ -47,9 +49,6 @@ public class MerchantLoaderService {
 
     }
 
-    public Set<String> getCategories() {
-        return Categories;
-    }
     public List<MerchantCategory> getMerchant() {
         return merchants;
     }

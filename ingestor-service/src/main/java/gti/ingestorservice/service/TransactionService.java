@@ -10,10 +10,13 @@ import java.util.Date;
 public class TransactionService {
     @Autowired
     private kafkaProducer kafkaProducer;
+    @Autowired
+    TransactionIncomingValidator transactionIncomingValidator;
 
     public String publish(TransactionIncoming transactionIncoming) {
         transactionIncoming.setCreatedDate(new Date());
         try {
+            transactionIncomingValidator.validate(transactionIncoming);
             kafkaProducer.publish(transactionIncoming);
         } catch (Exception e) {
             e.printStackTrace();

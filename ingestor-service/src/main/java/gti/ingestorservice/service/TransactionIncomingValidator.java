@@ -1,6 +1,6 @@
 package gti.ingestorservice.service;
 
-import com.example.dto.TransactionIncoming;
+import gti.ingestorservice.dto.TransactionIncoming;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
@@ -47,7 +47,7 @@ public class TransactionIncomingValidator {
             );
         }
 
-        if (transaction.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+        if (transaction.getAmount().compareTo(BigDecimal.ZERO) < 0) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "amount must be positive"
