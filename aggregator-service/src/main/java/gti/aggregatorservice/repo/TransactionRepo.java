@@ -15,19 +15,9 @@ import java.util.UUID;
 @Repository
 public interface TransactionRepo extends JpaRepository<TransactionEvent, UUID> {
 
-    List<TransactionEvent> findByCategory(String Category);
-
     List<TransactionEvent> findByMerchantId(Integer merchantId);
 
     List<TransactionEvent> findByTransactionDateBetween(Date transactionDateStart, Date transactionDateEnd);
-
-
-    @Query("""
-                SELECT SUM(t.amount)
-                FROM TransactionEvent t
-                WHERE t.accountId = :accountId
-            """)
-    BigDecimal getTotalSpend(String accountId);
 
     @Query("""
                 SELECT SUM(t.amount)

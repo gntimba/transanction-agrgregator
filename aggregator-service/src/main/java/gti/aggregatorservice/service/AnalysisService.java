@@ -41,4 +41,8 @@ public class AnalysisService {
     public BigDecimal getTotalSpendBetweenDates(Date start, Date endExclusive, String account) {
         return transactionRepo.getTotalSpendBetweenDates(account,start,endExclusive);
     }
+
+    public List<TransactionEvent> findByMerchantId(Integer merchant) {
+        return transactionRepo.findByMerchantId(merchant);
+    }
 }
