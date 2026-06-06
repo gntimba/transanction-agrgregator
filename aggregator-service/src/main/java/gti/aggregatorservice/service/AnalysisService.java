@@ -1,12 +1,10 @@
 package gti.aggregatorservice.service;
 
-import gti.aggregatorservice.dto.DailyTxnCount;
-import gti.aggregatorservice.dto.MonthlyTotal;
-import gti.aggregatorservice.dto.TopMerchant;
-import gti.aggregatorservice.dto.TransactionEvent;
+import gti.aggregatorservice.dto.*;
 import gti.aggregatorservice.repo.TransactionRepo;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -29,10 +27,18 @@ public class AnalysisService {
     }
 
     public List<MonthlyTotal> getMonthlySpend() {
-       return transactionRepo.getMonthlySpend();
+        return transactionRepo.getMonthlySpend();
     }
 
     public List<TopMerchant> getTopMerchants() {
         return transactionRepo.getTopMerchants();
+    }
+
+    public List<SpendPerCategory> getSpendPerCategory(String account) {
+        return transactionRepo.getSpendPerCategory(account);
+    }
+
+    public BigDecimal getTotalSpendBetweenDates(Date start, Date endExclusive, String account) {
+        return transactionRepo.getTotalSpendBetweenDates(account,start,endExclusive);
     }
 }

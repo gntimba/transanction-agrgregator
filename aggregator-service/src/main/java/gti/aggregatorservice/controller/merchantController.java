@@ -1,6 +1,8 @@
 package gti.aggregatorservice.controller;
 
 import gti.aggregatorservice.dto.MerchantCategory;
+import gti.aggregatorservice.dto.TransactionEvent;
+import gti.aggregatorservice.service.AggregatorService;
 import gti.aggregatorservice.service.MerchantLoaderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,14 +12,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
 public class merchantController {
     private MerchantLoaderService merchantLoaderService;
-    public merchantController(MerchantLoaderService merchantLoaderService) {
+    private AggregatorService aggregatorService;
+    public merchantController(MerchantLoaderService merchantLoaderService, AggregatorService aggregatorService) {
             this.merchantLoaderService = merchantLoaderService;
+            this.aggregatorService = aggregatorService;
     }
     @GetMapping("v1/categores")
     public Set<String> getCategory() {
@@ -40,4 +46,17 @@ public class merchantController {
         }
         return value;
     }
+
+    @GetMapping("v1/tran")
+    public Optional<TransactionEvent> getbyID(@RequestParam UUID id) {
+        var value = aggregatorService.findById(id);
+        if(value.isEmpty()){
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "id not found"
+            );
+        }
+        return value;
+    }
+
 }

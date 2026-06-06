@@ -1,9 +1,6 @@
 package gti.aggregatorservice.repo;
 
-import gti.aggregatorservice.dto.DailyTxnCount;
-import gti.aggregatorservice.dto.MonthlyTotal;
-import gti.aggregatorservice.dto.TopMerchant;
-import gti.aggregatorservice.dto.TransactionEvent;
+import gti.aggregatorservice.dto.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,10 +9,11 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 
 @Repository
-public interface TransactionRepo extends JpaRepository<TransactionEvent, String> {
+public interface TransactionRepo extends JpaRepository<TransactionEvent, UUID> {
 
     List<TransactionEvent> findByCategory(String Category);
 
@@ -25,31 +23,31 @@ public interface TransactionRepo extends JpaRepository<TransactionEvent, String>
 
 
     @Query("""
-    SELECT SUM(t.amount)
-    FROM TransactionEvent t
-    WHERE t.accountId = :accountId
-""")
+                SELECT SUM(t.amount)
+                FROM TransactionEvent t
+                WHERE t.accountId = :accountId
+            """)
     BigDecimal getTotalSpend(String accountId);
 
     @Query("""
-    SELECT SUM(t.amount)
-    FROM TransactionEvent t
-    WHERE t.accountId = :accountId
-    AND t.transactionDate BETWEEN :startDate AND :endDate
-""")
+                SELECT SUM(t.amount)
+                FROM TransactionEvent t
+                WHERE t.accountId = :accountId
+                AND t.transactionDate BETWEEN :startDate AND :endDate
+            """)
     BigDecimal getTotalSpendBetweenDates(
             String accountId,
             Date startDate,
             Date endDate
     );
-    @Query("""
-    SELECT t.category, SUM(t.amount)
-    FROM TransactionEvent t
-    WHERE t.accountId = :accountId
-    GROUP BY t.category
-""")
-    List<Object[]> getSpendPerCategory(String accountId);
 
+    @Query("""
+                SELECT t.category as category, SUM(t.amount) as total
+                FROM TransactionEvent t
+                WHERE t.accountId = :accountId
+                GROUP BY t.category
+            """)
+    List<SpendPerCategory> getSpendPerCategory(String accountId);
 
 
     @Query("""
@@ -62,19 +60,19 @@ public interface TransactionRepo extends JpaRepository<TransactionEvent, String>
     List<MonthlyTotal> getMonthlySpend();
 
     @Query("""
-    SELECT t.merchant as merchant, SUM(t.amount) as total
-    FROM TransactionEvent t
-    GROUP BY t.merchant
-    ORDER BY SUM(t.amount) DESC
-""")
+                SELECT t.merchant as merchant, SUM(t.amount) as total
+                FROM TransactionEvent t
+                GROUP BY t.merchant
+                ORDER BY SUM(t.amount) DESC
+            """)
     List<TopMerchant> getTopMerchants();
 
 
     @Query("""
-    SELECT DATE(t.transactionDate) as transactionDate,
-           COUNT(t) as total
-    FROM TransactionEvent t
-    GROUP BY DATE(t.transactionDate)
-""")
+                SELECT DATE(t.transactionDate) as transactionDate,
+                       COUNT(t) as total
+                FROM TransactionEvent t
+                GROUP BY DATE(t.transactionDate)
+            """)
     List<DailyTxnCount> getDailyTransactionCount();
 }

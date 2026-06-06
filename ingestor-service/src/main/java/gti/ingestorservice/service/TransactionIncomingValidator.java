@@ -3,6 +3,7 @@ package gti.ingestorservice.service;
 import gti.ingestorservice.dto.TransactionIncoming;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
@@ -10,7 +11,14 @@ import java.math.BigDecimal;
 @Component
 public class TransactionIncomingValidator {
 
+    ExternalClient externalClient;
+
+    public TransactionIncomingValidator(ExternalClient externalClient) {
+        this.externalClient = externalClient;
+    }
+
     public void validate(TransactionIncoming transaction) {
+
 
         if (transaction == null) {
             throw new ResponseStatusException(
@@ -26,6 +34,26 @@ public class TransactionIncomingValidator {
             );
         }
 
+        try {
+
+            var response = externalClient.getbyID(transaction.getId());
+
+            if (response != null) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "id is in use"
+                );
+            }
+
+        } catch (RestClientResponseException ex) {
+
+            if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
+              //  return; // ID not found, proceed
+            }
+
+           // throw ex;
+        }
+
         if (transaction.getAccountId() == null || transaction.getAccountId().isBlank()) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
@@ -39,6 +67,22 @@ public class TransactionIncomingValidator {
                     "merchant_id is required"
             );
         }
+
+
+        try {
+            var responses = externalClient.getMerchant(transaction.getMerchantId());
+        } catch (RestClientResponseException ex) {
+
+            if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Merchant not found"
+                );
+            }
+
+            throw ex;
+        }
+
 
         if (transaction.getAmount() == null) {
             throw new ResponseStatusException(
