@@ -1,5 +1,6 @@
 package gti.ingestorservice.service;
 
+import gti.ingestorservice.exception.ValidationException;
 import gti.ingestorservice.dto.TransactionIncoming;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -7,6 +8,8 @@ import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class TransactionIncomingValidator {
@@ -18,6 +21,7 @@ public class TransactionIncomingValidator {
     }
 
     public void validate(TransactionIncoming transaction) {
+        List<String> errrors = new ArrayList<>();
 
 
         if (transaction == null) {
@@ -28,10 +32,11 @@ public class TransactionIncomingValidator {
         }
 
         if (transaction.getId() == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "id is required"
-            );
+            errrors.add("id is required");
+//            throw new ResponseStatusException(
+//                    HttpStatus.BAD_REQUEST,
+//                    "id is required"
+//            );
         }
 
         try {
@@ -39,33 +44,36 @@ public class TransactionIncomingValidator {
             var response = externalClient.getbyID(transaction.getId());
 
             if (response != null) {
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "id is in use"
-                );
+                errrors.add("id is in use");
+//                throw new ResponseStatusException(
+//                        HttpStatus.BAD_REQUEST,
+//                        "id is in use"
+//                );
             }
 
         } catch (RestClientResponseException ex) {
 
             if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
-              //  return; // ID not found, proceed
+                //  return; // ID not found, proceed
             }
 
-           // throw ex;
+            // throw ex;
         }
 
         if (transaction.getAccountId() == null || transaction.getAccountId().isBlank()) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "customer_id is required"
-            );
+            errrors.add("accountId is required");
+//            throw new ResponseStatusException(
+//                    HttpStatus.BAD_REQUEST,
+//                    "customer_id is required"
+//            );
         }
 
         if (transaction.getMerchantId() == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "merchant_id is required"
-            );
+            errrors.add("merchantId is required");
+//            throw new ResponseStatusException(
+//                    HttpStatus.BAD_REQUEST,
+//                    "merchant_id is required"
+//            );
         }
 
 
@@ -74,50 +82,70 @@ public class TransactionIncomingValidator {
         } catch (RestClientResponseException ex) {
 
             if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "Merchant not found"
-                );
-            }
-
-            throw ex;
+                errrors.add("Merchant not found");
+//                throw new ResponseStatusException(
+//                        HttpStatus.BAD_REQUEST,
+//                        "Merchant not found"
+//                );
+            } else
+                throw ex;
         }
 
 
         if (transaction.getAmount() == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "amount is required"
-            );
+            errrors.add("amount is required");
+//            throw new ResponseStatusException(
+//                    HttpStatus.BAD_REQUEST,
+//                    "amount is required"
+//            );
         }
 
-        if (transaction.getAmount().compareTo(BigDecimal.ZERO) < 0) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "amount must be positive"
-            );
+        if (transaction.getAmount() != null &&
+                transaction.getAmount().compareTo(BigDecimal.ZERO) < 0) {
+            errrors.add("amount must be positive");
+//            throw new ResponseStatusException(
+//                    HttpStatus.BAD_REQUEST,
+//                    "amount must be positive"
+//            );
         }
 
         if (transaction.getCurrency() != null &&
                 !transaction.getCurrency().matches("[A-Z]{3}")) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "currency must be a 3-letter ISO code"
-            );
+            errrors.add("currency must be a 3-letter ISO code");
+//            throw new ResponseStatusException(
+//                    HttpStatus.BAD_REQUEST,
+//                    "currency must be a 3-letter ISO code"
+//            );
+        }
+
+        if (transaction.getCurrency() != null &&
+                !transaction.getCurrency().equals("ZAR")) {
+            errrors.add("currency must be a ZAR");
+//            throw new ResponseStatusException(
+//                    HttpStatus.BAD_REQUEST,
+//                    "currency must be a 3-letter ISO code"
+//            );
         }
 
         if (transaction.getSource() == null || transaction.getSource().isBlank()) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "source is required"
-            );
+            errrors.add("source is required");
+//            throw new ResponseStatusException(
+//                    HttpStatus.BAD_REQUEST,
+//                    "source is required"
+//            );
         }
 
         if (transaction.getTransactionDate() == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "transaction_date is required"
-            );
+            errrors.add("transactionDate is required");
+//            throw new ResponseStatusException(
+//                    HttpStatus.BAD_REQUEST,
+//                    "transaction_date is required"
+//            );
+        }
+
+
+        if (!errrors.isEmpty()) {
+            throw new ValidationException(errrors);
         }
     }
 }

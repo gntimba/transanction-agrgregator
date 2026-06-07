@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+
 @Service
 public class TransactionService {
     @Autowired
@@ -14,14 +15,9 @@ public class TransactionService {
     TransactionIncomingValidator transactionIncomingValidator;
 
     public String publish(TransactionIncoming transactionIncoming) {
-        transactionIncoming.setCreatedDate(new Date());
-        try {
-            transactionIncomingValidator.validate(transactionIncoming);
-            kafkaProducer.publish(transactionIncoming);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return e.getMessage();
-        }
+
+        transactionIncomingValidator.validate(transactionIncoming);
+        kafkaProducer.publish(transactionIncoming);
         return "success";
 
     }
