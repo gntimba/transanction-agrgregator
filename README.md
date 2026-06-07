@@ -125,7 +125,7 @@ Submit a new transaction for processing.
   "accountId": "ACC-001",
   "merchantId": 42,
   "amount": 149.99,
-  "currency": "USD",
+  "currency": "ZAR",
   "source": "mobile-app",
   "transactionDate": "2024-06-01T10:30:00Z"
 }
@@ -137,7 +137,7 @@ Submit a new transaction for processing.
 | `accountId` | string | ✅ | acoount of the user                              |
 | `merchantId` | integer | ✅ | Must exist in the aggregator's merchant registry |
 | `amount` | decimal | ✅ | Must be ≥ 0                                      |
-| `currency` | string | ✅ | ISO 4217 format e.g. `USD`, `ZAR`                |
+| `currency` | string | ✅ | ISO 4217 format e.g.  `ZAR` supported            |
 | `source` | string | ✅ | Channel identifier e.g. `mobile-app`, `pos`      |
 | `transactionDate` | ISO datetime | ✅ |                                                  |
 | `createdDate` | ISO datetime | ❌ | Defaults to now                                  |
